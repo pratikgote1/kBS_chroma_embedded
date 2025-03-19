@@ -1,19 +1,12 @@
-from fastapi import APIRouter
-from app.models import  SearchRequest, Knowledge
-from app.services.knowledge_service import add_knowledge, search_knowledge
+from fastapi import APIRouter, HTTPException, Query
+from app.services.chroma_services import add_knowledge
 
 router = APIRouter()
 
-@router.post("/knowledge/")
-def create_knowledge(data: Knowledge):
-    add_knowledge(data.knowledge_set, data.text)
-    return {"message": "Knowledge added successfully"}
-
-
-
-@router.post("/knowledge/search/")
-def search(data: SearchRequest):
-     results = search_knowledge(data.knowledge_set, data.query, data.top_k)
-     return {"results": results}
-
-
+@router.post("/knowledge_sets/{knowledge_set_id}/knowledge/")
+def add_knowledge_route(knowledge_set_id: str, text: str = Query(...)):
+    try:
+        response = add_knowledge(knowledge_set_id, text)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

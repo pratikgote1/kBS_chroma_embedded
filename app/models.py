@@ -1,21 +1,16 @@
 from pydantic import BaseModel
+from typing import List, Dict
+
+class Knowledge(BaseModel):
+    id: str
+    name_of_knowledge: str
+    text: str
+    vector: List[float] = None
 
 class KnowledgeSet(BaseModel):
-    name : str
-    description : str
-    
-class Knowledge(BaseModel):
-    knowledge_set : str
-    text : str
-    
-class SearchRequest(BaseModel):
-    knowledge_set : str
-    text: str
-    
-# search request model
-class SearchRequest(BaseModel):
-    knowledge_set : str
-    query : str
-    top_k : int = 5
-    
-    
+    id: str
+    name: str
+    description: str
+    knowledge: List[Knowledge] = []
+
+knowledge_sets: Dict[str, KnowledgeSet] = {}
